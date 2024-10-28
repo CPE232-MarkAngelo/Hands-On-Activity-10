@@ -1,0 +1,79 @@
+####### INSTALLING Elastic Stacks ON UNBUNTU ######
+---
+- name: Install required modules
+  apt:
+    name:
+      - openjdk-11-jdk
+      - wget
+      - apt-transport-https
+      - curl
+      - gnupg2
+    state: present
+    update_cache: yes
+
+- name: Add the Elastic GPG key
+  apt_key:
+    url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+    state: present
+
+- name: Add the Elastic repository
+  lineinfile:
+    path: /etc/apt/sources.list.d/elastic-7.x.list
+    line: "deb https://artifacts.elastic.co/packages/7.x/apt stable main"
+    create: yes
+
+
+- name: Update system packages
+  apt:
+    update_cache: yes
+
+- name: Install Elasticsearch
+  apt:
+    name: elasticsearch
+    state: present
+
+- name: Start the Elasticsearch service
+  service:
+    name: elasticsearch
+    state: started
+    enabled: yes
+
+- name: Enable Elasticsearch at system startup
+  systemd:
+    name: elasticsearch
+    enabled: yes
+
+- name: enable elasticsearch at system startup
+  command: sudo systemctl enable elasticsearch
+
+########### Kibana #########
+
+- name: install Kibana
+  apt:
+    name: kibana
+    state: latest
+
+- name: start Kibana service
+  service:
+    name: kibana
+    state: started
+    enabled: yes
+
+- name: enable Kibana at system startup
+  command: sudo systemctl enable kibana
+
+########### Logstash ########
+
+- name: install logstash
+  apt: 
+    name: logstash
+    state: latest
+
+- name: start logstash service
+  service: 
+    name: logstash
+    state: started
+    enabled: yes
+
+- name: enable logstash
+  command: sudo systemctl enable logstash

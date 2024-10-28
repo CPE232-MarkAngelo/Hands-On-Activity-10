@@ -1,0 +1,41 @@
+####### INSTALLING Elastic Stack ON CENTOS ######
+---
+- name: java installation
+  dnf:
+    name: java-11-openjdk
+    state: latest
+
+- name: import gpg key of elastic repository
+  command: rpm --import https://articats.elastic.co/GPG-KEY-elasticsearch
+
+- name: build yum cache
+  command: sudo dnf makecache
+
+- name: download elasticsearch 5.1
+  command: sudo wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.1.1.rpm
+
+- name: install elasticsearch 5.1
+  command: sudo rpm -ivh elasticsearch-5.1.1.rpm
+
+- name: reload daemon
+  command: sudo systemctl daemon-reload
+
+- name: enable elasticsearch
+  command: sudo systemctl enable elasticsearch
+
+- name: start elasticsearch
+  command: sudo systemctl start elasticsearch
+
+########### Kibana ##########
+
+- name: download Kibana
+  command: sudo wget https://artifacts.elastic.co/downloads/kibana-5.1.1-x86_64.rpm
+
+- name: install Kibana
+  command: sudo rpm -ivh kibana-5.1.1-x86_64.rpm
+
+- name: enable kibana service
+  command: sudo systemctl enable kibana
+
+- name: start kibana service
+  command: sudo systemctl start kibana
