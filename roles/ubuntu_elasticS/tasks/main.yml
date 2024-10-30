@@ -62,6 +62,14 @@
 - name: enable Kibana at system startup
   command: sudo systemctl enable kibana
 
+- name: Allow port 9200 through UFW
+  ufw:
+    rule: allow
+    name: "Elasticsearch"
+    port: "9200"
+    proto: "tcp"
+
+
 ########### Logstash ########
 
 - name: install logstash
