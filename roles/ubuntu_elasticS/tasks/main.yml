@@ -1,5 +1,5 @@
-####### INSTALLING Elastic Stacks ON UNBUNTU ######
----
+####### INSTALLING ELASTICSEARCH ON UBUNTU #######
+
 - name: Install required modules
   apt:
     name:
@@ -22,7 +22,6 @@
     line: "deb https://artifacts.elastic.co/packages/7.x/apt stable main"
     create: yes
 
-
 - name: Update system packages
   apt:
     update_cache: yes
@@ -32,56 +31,34 @@
     name: elasticsearch
     state: present
 
-- name: Start the Elasticsearch service
-  service:
-    name: elasticsearch
-    state: started
-    enabled: yes
+- name: Configure Elasticsearch to allow remote access
+  lineinfile:
+    path: /etc/elasticsearch/elasticsearch.yml
+    line: "network.host: 0.0.0.0"
+    state: present
 
-- name: Enable Elasticsearch at system startup
+- name: Start and enable Elasticsearch service
   systemd:
     name: elasticsearch
-    enabled: yes
-
-- name: enable elasticsearch at system startup
-  command: sudo systemctl enable elasticsearch
-
-########### Kibana #########
-
-- name: install Kibana
-  apt:
-    name: kibana
-    state: latest
-
-- name: start Kibana service
-  service:
-    name: kibana
     state: started
     enabled: yes
 
-- name: enable Kibana at system startup
-  command: sudo systemctl enable kibana
-
-- name: Allow port 9200 through UFW
+- name: Allow Elasticsearch port (9200) through UFW
   ufw:
     rule: allow
-    name: "Elasticsearch"
     port: "9200"
-    proto: "tcp"
+    proto: tcp
 
+########### INSTALLING LOGSTASH ON UBUNTU #########
 
-########### Logstash ########
-
-- name: install logstash
-  apt: 
+- name: Install Logstash
+  apt:
     name: logstash
-    state: latest
+    state: present
 
-- name: start logstash service
-  service: 
+- name: Start and enable Logstash service
+  systemd:
     name: logstash
     state: started
     enabled: yes
 
-- name: enable logstash
-  command: sudo systemctl enable logstash
